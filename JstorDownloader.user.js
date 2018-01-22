@@ -3,9 +3,12 @@
 // @namespace   nl.camilstaps.jstordownloader
 // @description Downloads articles from JSTOR as PDF
 // @include     http://www.jstor.org/stable/*
+// @require     https://code.jquery.com/jquery-3.3.1.slim.min.js
 // @version     1
 // @grant       none
 // ==/UserScript==
+
+this.$ = this.jQuery = jQuery.noConflict(true);
 
 function displayFinalInstructions(lastp) {
 	$('#search-term-highlight-container').remove();
@@ -38,7 +41,7 @@ function downloadNext(thisp, lastp) {
 	$a.appendTo('body');
 	$a[0].click();
 	$a.remove();
-	$('.next-page a').click();
+	$('.next-page').click();
 
 	var interval = window.setInterval(function(){
 		if ($('.scan-image-wrapper').hasClass('loading'))
@@ -58,17 +61,19 @@ function download() {
 	return false;
 }
 
-var $scan = $('#page_scan_tab_contents');
-if ($scan.length) {
-	var $button = $('<a href="#"></a>');
-	$button
-		.click(download)
-		.text('Download')
-		.css({
-			float: 'right',
-			margin: '10px 30px',
-		}).addClass('button');
-	$scan.find('.shelf-banner > .row').append($button);
-} else {
-	console.log('Article not on shelf');
-}
+window.addEventListener('load', function() {
+  var $scan = $('#page_scan_tab_contents');
+  if ($scan.length) {
+    var $button = $('<a href="#"></a>');
+    $button
+      .click(download)
+      .text('Download')
+      .css({
+        float: 'right',
+        margin: '10px 30px',
+      }).addClass('button');
+    $scan.find('.shelf-banner > .row').append($button);
+  } else {
+    console.log('Article not on shelf');
+  }
+});
